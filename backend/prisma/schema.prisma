@@ -21,6 +21,148 @@ model User {
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-
+  memberships  Membership[]
+  ticketsCreated  Ticket[] @relation("TicketCustomer")
+  ticketsAssigned Ticket[] @relation("TicketAgent")
+  ticketEvents TicketEvent[]
+  ratings      Rating[]
   @@map("users")
+}
+
+model Business {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  email       String
+  logoUrl     String?
+  description String?
+  plan        String   @default("FREE")
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  memberships  Membership[]
+  invitations Invitation[]
+  categories  Category[]
+  tickets Ticket[]
+  @@map("businesses")
+}
+enum Role {
+  SUPER_ADMIN
+  BUSINESS_ADMIN
+  AGENT
+  CUSTOMER
+}
+model Membership {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id])
+  role       Role
+  joinedAt   DateTime @default(now())
+
+  @@unique([userId, businessId])
+  @@map("memberships")
+}
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  REVOKED
+}
+model Invitation {
+  id         String           @id @default(uuid())
+  businessId String
+  business   Business         @relation(fields: [businessId], references: [id])
+  email      String
+  role       Role
+  tokenHash  String           @unique
+  expiresAt  DateTime
+  status     InvitationStatus @default(PENDING)
+  createdAt  DateTime         @default(now())
+
+  @@index([businessId])
+  @@map("invitations")
+}
+model Category {
+  id          String   @id @default(uuid())
+  businessId  String
+  business    Business @relation(fields: [businessId], references: [id])
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  tickets Ticket[]
+  @@unique([businessId, name])
+  @@map("categories")
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_FOR_CUSTOMER
+  RESOLVED
+  CLOSED
+}
+model Ticket {
+  id              String         @id @default(uuid())
+  businessId      String
+  business        Business       @relation(fields: [businessId], references: [id])
+  customerId      String
+  customer        User           @relation("TicketCustomer", fields: [customerId], references: [id])
+  assignedAgentId String?
+  agent           User?          @relation("TicketAgent", fields: [assignedAgentId], references: [id])
+  categoryId      String?
+  category        Category?      @relation(fields: [categoryId], references: [id])
+  subject         String
+  description     String
+  priority        TicketPriority @default(MEDIUM)
+  status          TicketStatus   @default(OPEN)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  resolvedAt      DateTime?
+  events TicketEvent[]
+  rating Rating?
+
+  @@index([businessId, status])
+  @@index([assignedAgentId])
+  @@index([customerId])
+  @@map("tickets")
+}
+
+
+model TicketEvent {
+  id        String   @id @default(uuid())
+  ticketId  String
+  ticket    Ticket   @relation(fields: [ticketId], references: [id])
+  actorId   String
+  actor     User     @relation(fields: [actorId], references: [id])
+  eventType String
+  oldValue  String?
+  newValue  String?
+  createdAt DateTime @default(now())
+
+  @@index([ticketId, createdAt])
+  @@map("ticket_events")
+}
+
+
+
+model Rating {
+  id         String   @id @default(uuid())
+  ticketId   String   @unique
+  ticket     Ticket   @relation(fields: [ticketId], references: [id])
+  customerId String
+  customer   User     @relation(fields: [customerId], references: [id])
+  rating     Int
+  feedback   String?
+  createdAt  DateTime @default(now())
+
+  @@map("ratings")
 }
