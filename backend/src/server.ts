@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import app from './app.js'
 import { prisma } from './config/prisma.js'
+import { connectMongo } from './config/mongo.js'
 
 
 
