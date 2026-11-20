@@ -26,6 +26,7 @@ model User {
   ticketsAssigned Ticket[] @relation("TicketAgent")
   ticketEvents TicketEvent[]
   ratings      Rating[]
+  refreshTokens RefreshToken[]
   @@map("users")
 }
 
@@ -165,4 +166,17 @@ model Rating {
   createdAt  DateTime @default(now())
 
   @@map("ratings")
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@map("refresh_tokens")
 }
