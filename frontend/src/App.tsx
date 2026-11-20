@@ -5,6 +5,7 @@ import LoginPage from './pages/auth/LoginPage'
 import RegisterPage from './pages/auth/RegisterPage'
 import DashboardPage from './pages/DashboardPage'
 import CreateBusinessPage from './pages/onboarding/CreateBusinessPage'
+import AppLayout from './components/layout/AppLayout'
 
 function App() {
   return (
@@ -15,7 +16,9 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route element={<ProtectedRoute />}>
           <Route path="/onboarding" element={<CreateBusinessPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
+             <Route element={<AppLayout />}>
+    <Route path="/dashboard" element={<DashboardPage />} />
+  </Route>
           </Route>
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
