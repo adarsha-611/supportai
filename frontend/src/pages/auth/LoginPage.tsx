@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { isAxiosError } from 'axios'
 
 const schema = z.object({
   email: z.string().email('Enter a valid email'),
@@ -26,8 +27,12 @@ export default function LoginPage() {
     try {
       await login(values.email, values.password)
       navigate('/dashboard')
-    } catch {
-      setError('Invalid email or password')
+        } catch (e) {
+      if (isAxiosError(e) && e.response) {
+        setError(e.response.data?.message ?? `Server error (${e.response.status})`)
+      } else {
+        setError('Cannot reach the server. Is the backend running?')
+      }
     }
   }
 
