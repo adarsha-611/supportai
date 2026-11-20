@@ -1,10 +1,24 @@
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
+import ProtectedRoute from './routes/ProtectedRoute'
+import LoginPage from './pages/auth/LoginPage'
+import RegisterPage from './pages/auth/RegisterPage'
+import DashboardPage from './pages/DashboardPage'
+
 function App() {
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-      <button className="rounded-lg bg-blue-600 px-6 py-3 text-white font-medium shadow hover:bg-blue-700">
-        SupportAI
-      </button>
-    </div>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   )
 }
 
