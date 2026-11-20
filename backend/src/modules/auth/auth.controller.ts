@@ -13,3 +13,6 @@ export async function login(req: Request, res: Response) {
   const result = await authService.login(input)
   res.json({ success: true, data: result })
 }
+export async function me(req: Request, res: Response) {
+  res.json({ success: true, data: { user: req.user } })
+}
