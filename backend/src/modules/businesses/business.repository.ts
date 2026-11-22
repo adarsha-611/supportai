@@ -26,4 +26,11 @@ export const businessRepository = {
     }),
 
   findById: (id: string) => prisma.business.findUnique({ where: { id } }),
+
+    listMembers: (businessId: string) =>
+    prisma.membership.findMany({
+      where: { businessId },
+      include: { user: { select: { id: true, name: true, email: true } } },
+      orderBy: { joinedAt: 'asc' },
+    }),
 }

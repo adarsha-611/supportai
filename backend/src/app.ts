@@ -7,6 +7,7 @@ import businessRoutes from './modules/businesses/business.routes.js'
 
 import { errorHandler } from './middleware/errorHandler.js'
 import cookieParser from 'cookie-parser'
+import invitationRoutes from './modules/invitations/invitation.routes.js'
 
 const app = express()
 
@@ -15,6 +16,7 @@ app.use(cors({ origin: process.env.CLIENT_URL ?? 'http://localhost:5173', creden
 app.use(cookieParser())
 app.use(express.json())
 app.use('/api/v1/businesses', businessRoutes)
+app.use('/api/v1/invitations', invitationRoutes)
 
 app.get('/api/v1/health', (req, res) => {
   res.json({ status: 'ok' })
