@@ -8,6 +8,9 @@ import CreateBusinessPage from './pages/onboarding/CreateBusinessPage'
 import AppLayout from './components/layout/AppLayout'
 import TeamPage from './pages/admin/TeamPage'
 import AcceptInvitePage from './pages/auth/AcceptInvitePage'
+import TicketsPage from './pages/tickets/TicketsPage'
+import CreateTicketPage from './pages/tickets/CreateTicketPage'
+import TicketDetailPage from './pages/tickets/TicketDetailPage'
 
 function App() {
   return (
@@ -24,6 +27,9 @@ function App() {
             <Route element={<AppLayout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/team" element={<TeamPage />} />
+              <Route path="/tickets" element={<TicketsPage />} />
+              <Route path="/tickets/new" element={<CreateTicketPage />} />
+              <Route path="/tickets/:id" element={<TicketDetailPage />} />
             </Route>
           </Route>
 
