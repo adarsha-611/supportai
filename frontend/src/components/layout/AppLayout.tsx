@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, LogOut, Menu, PanelLeftClose, PanelLeftOpen, Ticket, X } from 'lucide-react'
+import { LayoutDashboard, LogOut, Menu, PanelLeftClose, PanelLeftOpen, Ticket,Users, X } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/tickets', label: 'Tickets', icon: Ticket },
+  { to: '/team', label: 'Team', icon: Users },
 ]
 
 export default function AppLayout() {
